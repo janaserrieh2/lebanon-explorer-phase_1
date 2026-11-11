@@ -29,45 +29,61 @@ function TripPlanner() {
 
     const removeFav = (id) => {
         const updated = favs.filter((item) => item.id !== id);
+
         setFavs(updated);
-        localStorage.setItem("fav_destinations", JSON.stringify(updated));
+        localStorage.setItem(
+            "fav_destinations",
+            JSON.stringify(updated)
+        );
     };
 
     const handleAddTrip = (e) => {
         e.preventDefault();
+
         if (!destination.trim() || !date) return;
 
-        const newTrip = { id: Date.now(), destination, date };
-        setPlans([...plans, newTrip]);
+        const newTrip = {
+            id: Date.now(),
+            destination: destination.trim(),
+            date,
+        };
+
+        setPlans((previous) => [...previous, newTrip]);
+
         setDestination("");
         setDate("");
     };
 
     const handleDeleteTrip = (id) => {
-        setPlans(plans.filter((t) => t.id !== id));
+        setPlans((previous) =>
+            previous.filter((trip) => trip.id !== id)
+        );
     };
 
     return (
         <section className="container">
             <h1 className="title">My Saved Favorites ❤️</h1>
+
             {favs.length === 0 ? (
-                <div style={{ textAlign: "center", marginBottom: "50px" }}>
+                <div className="empty-state">
                     <p>No favorites saved yet!</p>
-                    <Link to="/destinations" className="btn" style={{ marginTop: "12px" }}>
+
+                    <Link to="/destinations" className="btn">
                         Explore & Add Favorites
                     </Link>
                 </div>
             ) : (
-                <div className="grid" style={{ marginBottom: "60px" }}>
+                <div className="grid">
                     {favs.map((item) => (
                         <div className="card" key={item.id}>
                             <img src={item.img} alt={item.name} />
+
                             <div className="card-content">
                                 <h3>{item.name}</h3>
                                 <p>{item.desc}</p>
+
                                 <button
-                                    className="btn"
-                                    style={{ background: "#a83232", marginTop: "10px" }}
+                                    className="btn delete-btn"
                                     onClick={() => removeFav(item.id)}
                                 >
                                     🗑 Remove Favorite
@@ -78,53 +94,61 @@ function TripPlanner() {
                 </div>
             )}
 
-            <hr style={{ margin: "50px 0", opacity: "0.2" }} />
+            <div className="planner-section">
+                <h2 className="title">Personal Trip Planner 📍</h2>
 
-            <h1 className="title">Personal Trip Planner 📍</h1>
-            <form className="contact-form" onSubmit={handleAddTrip}>
-                <input
-                    type="text"
-                    placeholder="Destination Name (e.g. Tyros Beach)"
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    required
-                />
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                />
-                <button type="submit" className="btn">
-                    ➕ Add to My Itinerary
-                </button>
-            </form>
+                <form className="contact-form" onSubmit={handleAddTrip}>
+                    <input
+                        type="text"
+                        placeholder="Destination Name (e.g. Tyros Beach)"
+                        value={destination}
+                        onChange={(e) => setDestination(e.target.value)}
+                        required
+                    />
 
-            <h2 style={{ marginTop: "40px", marginBottom: "20px", textAlign: "center" }}>
-                Scheduled Trips ({plans.length})
-            </h2>
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        min={new Date().toISOString().split("T")[0]}
+                        required
+                    />
 
-            {plans.length === 0 ? (
-                <p style={{ textAlign: "center" }}>No upcoming trips scheduled yet.</p>
-            ) : (
-                <div className="grid">
-                    {plans.map((t) => (
-                        <div className="card" key={t.id}>
-                            <div className="card-content">
-                                <h3>📍 {t.destination}</h3>
-                                <p><strong>Date:</strong> {t.date}</p>
-                                <button
-                                    className="btn"
-                                    style={{ background: "#a83232", marginTop: "10px" }}
-                                    onClick={() => handleDeleteTrip(t.id)}
-                                >
-                                    Delete Trip
-                                </button>
+                    <button type="submit" className="btn">
+                        ➕ Add to My Itinerary
+                    </button>
+                </form>
+
+                <h2 className="trip-heading">
+                    Scheduled Trips ({plans.length})
+                </h2>
+
+                {plans.length === 0 ? (
+                    <p className="empty-message">
+                        No trips scheduled yet. Start planning your next adventure!
+                    </p>
+                ) : (
+                    <div className="grid">
+                        {plans.map((trip) => (
+                            <div className="card" key={trip.id}>
+                                <div className="card-content">
+                                    <h3>📍 {trip.destination}</h3>
+                                    <p>
+                                        <strong>Date:</strong> {trip.date}
+                                    </p>
+
+                                    <button
+                                        className="btn delete-btn"
+                                        onClick={() => handleDeleteTrip(trip.id)}
+                                    >
+                                        Delete Trip
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
         </section>
     );
 }

@@ -19,16 +19,18 @@ function App() {
       <Navbar />
       <ScrollTop />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/destinations" element={<Destinations />} />
-        <Route path="/activities" element={<Activities />} />
-        <Route path="/food" element={<Food />} />
-        <Route path="/offers" element={<Offers />} />
-        <Route path="/planner" element={<TripPlanner />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/food" element={<Food />} />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/planner" element={<TripPlanner />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
 
       <Footer />
     </BrowserRouter>

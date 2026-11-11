@@ -7,8 +7,12 @@ function ScrollTop() {
         const handleScroll = () => {
             setShow(window.scrollY > 200);
         };
+
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, []);
 
     return (
@@ -16,9 +20,15 @@ function ScrollTop() {
             {show && (
                 <button
                     className="scroll-btn"
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    onClick={() =>
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                        })
+                    }
+                    aria-label="Scroll to top"
                 >
-                    ⬆
+                    ↑
                 </button>
             )}
         </>

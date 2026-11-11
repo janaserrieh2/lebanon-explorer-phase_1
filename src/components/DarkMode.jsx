@@ -11,11 +11,16 @@ function DarkMode() {
         } else {
             document.body.classList.remove("dark");
         }
+
         localStorage.setItem("darkMode", dark);
     }, [dark]);
 
     return (
-        <button className="nav-dark-btn" onClick={() => setDark(!dark)}>
+        <button
+            className="nav-dark-btn"
+            onClick={() => setDark((previous) => !previous)}
+            aria-label="Toggle dark mode"
+        >
             {dark ? "☀️ Light" : "🌙 Dark"}
         </button>
     );

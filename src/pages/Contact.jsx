@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 
 function Contact() {
     const location = useLocation();
+
     const [status, setStatus] = useState("");
     const [error, setError] = useState(false);
     const [messageText, setMessageText] = useState("");
@@ -10,13 +11,16 @@ function Contact() {
 
     useEffect(() => {
         if (location.state?.selectedOffer) {
-            setMessageText(`Hello, I would like to book the "${location.state.selectedOffer}" package.`);
+            setMessageText(
+                `Hello, I am interested in the "${location.state.selectedOffer}" package.`
+            );
             setSubject("Booking & Reservation");
         }
     }, [location]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         const name = e.target.name.value.trim();
         const email = e.target.email.value.trim();
         const message = messageText.trim();
@@ -26,11 +30,13 @@ function Contact() {
             setStatus("Name must be at least 3 characters.");
             return;
         }
-        if (!email.includes("@")) {
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             setError(true);
             setStatus("Please enter a valid email address.");
             return;
         }
+
         if (message.length < 10) {
             setError(true);
             setStatus("Message must be at least 10 characters.");
@@ -38,7 +44,10 @@ function Contact() {
         }
 
         setError(false);
-        setStatus("Thank you! Your message has been sent successfully.");
+        setStatus(
+            "Your form has been validated successfully! Thank you."
+        );
+
         e.target.reset();
         setMessageText("");
         setSubject("General Inquiry");
@@ -48,41 +57,70 @@ function Contact() {
         <section className="container">
             <h1 className="title">Get In Touch</h1>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "40px", alignItems: "start" }}>
+            <p className="page-subtitle">
+                Have a question or want to know more? Send us a message.
+            </p>
 
-                { }
-                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                    <div className="card" style={{ padding: "24px" }}>
+            <div className="contact-layout">
+                <div className="contact-info">
+                    <div className="card info-box">
                         <h3>📍 Office Location</h3>
-                        <p style={{ marginTop: "8px" }}>Beirut Digital District, Lebanon</p>
+                        <p>Beirut Digital District, Lebanon</p>
                     </div>
-                    <div className="card" style={{ padding: "24px" }}>
+
+                    <div className="card info-box">
                         <h3>📞 Phone & Email</h3>
-                        <p style={{ marginTop: "8px" }}>+961 1 234 567<br />support@explorelebanon.com</p>
+                        <p>
+                            +961 1 234 567
+                            <br />
+                            support@explorelebanon.com
+                        </p>
                     </div>
-                    <div className="card" style={{ padding: "24px" }}>
+
+                    <div className="card info-box">
                         <h3>⏰ Working Hours</h3>
-                        <p style={{ marginTop: "8px" }}>Mon - Fri: 9:00 AM - 6:00 PM<br />Saturday: 9:00 AM - 2:00 PM</p>
+                        <p>
+                            Mon - Fri: 9:00 AM - 6:00 PM
+                            <br />
+                            Saturday: 9:00 AM - 2:00 PM
+                        </p>
                     </div>
                 </div>
 
-                { }
                 <div>
-                    <form className="contact-form" onSubmit={handleSubmit} style={{ maxWidth: "100%" }}>
-                        <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "14px" }}>Subject / Inquiry Type:</label>
+                    <form
+                        className="contact-form"
+                        onSubmit={handleSubmit}
+                    >
+                        <label htmlFor="subject">Subject / Inquiry Type</label>
+
                         <select
+                            id="subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
-                            className="search"
-                            style={{ marginBottom: "16px", cursor: "pointer" }}
                         >
                             <option value="General Inquiry">General Inquiry</option>
-                            <option value="Booking & Reservation">Booking & Reservation</option>
-                            <option value="Feedback & Review">Feedback & Review</option>
+                            <option value="Booking & Reservation">
+                                Booking & Reservation
+                            </option>
+                            <option value="Feedback & Review">
+                                Feedback & Review
+                            </option>
                         </select>
 
-                        <input name="name" type="text" placeholder="Full Name" required />
-                        <input name="email" type="email" placeholder="Email Address" required />
+                        <input
+                            name="name"
+                            type="text"
+                            placeholder="Full Name"
+                            required
+                        />
+
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="Email Address"
+                            required
+                        />
 
                         <textarea
                             name="message"
@@ -90,18 +128,19 @@ function Contact() {
                             value={messageText}
                             onChange={(e) => setMessageText(e.target.value)}
                             required
-                        ></textarea>
+                        />
 
-                        <button type="submit" className="btn" style={{ width: "100%" }}>Send Message</button>
+                        <button type="submit" className="btn">
+                            Send Message
+                        </button>
                     </form>
 
                     {status && (
-                        <p style={{ textAlign: "center", marginTop: "20px", color: error ? "#ef4444" : "#22c55e", fontWeight: "600" }}>
+                        <p className={`form-status ${error ? "error" : "success"}`}>
                             {status}
                         </p>
                     )}
                 </div>
-
             </div>
         </section>
     );
